@@ -37,6 +37,9 @@ var DX = 0.20;
 var MOVE_COOLDOWN = 50;
 var lastMoveTime = -Infinity;
 
+const FRAME_MS = 1000 / 60;
+let lastFrameTime = 0;
+
 window.onload = init;
 
 function init() {
@@ -65,7 +68,7 @@ function init() {
 
     uColor = gl.getUniformLocation(program, "uColor");
 
-    render();
+    requestAnimationFrame(render);
 }
 
 function drawRect(x0, y0, x1, y1, color) {
@@ -205,7 +208,14 @@ function collisionCheck() {
 
 
 
-function render() {
+function render(now) {
+
+    if (now - lastFrameTime < FRAME_MS) {
+        requestAnimationFrame(render);
+        return;
+    }
+    lastFrameTime = now;
+
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     drawRect(-1.0, -1.0, 1.0, 1.0, WALK);
@@ -237,5 +247,5 @@ function render() {
 
     if (collisionCheck()) return;
 
-    window.requestAnimationFrame(render);
+    requestAnimationFrame(render);
 }
