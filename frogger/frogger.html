@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Frogger – Grid Template</title>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+  attribute vec4 vPosition;
+  void main() {
+      gl_Position = vPosition;
+  }
+  </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+  uniform vec4 uColor;
+  void main() {
+      gl_FragColor = uColor;
+  }
+  </script>
+
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <script type="text/javascript" src="../Common/MV.js"></script>
+    <script type="text/javascript" src="frogger.js"></script>
+</head>
+
+<body>
+    <canvas id="gl-canvas" width="800" height="800" oncontextmenu="return false;">
+        Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+
+    <h2>Stig: <span id="points">0</span></h2>
+</body> 
+
+</html>
