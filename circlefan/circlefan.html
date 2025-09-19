@@ -4,11 +4,18 @@
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 
+uniform float time;
 attribute vec4 vPosition;
 
 void main()
 {
-    gl_Position = vPosition;
+    vec4 t = vPosition;
+
+    float s = 1.0+0.3*sin(0.003*time);
+
+    t.y *= s;
+
+    gl_Position = t;
 }
 </script>
 
@@ -28,13 +35,9 @@ void main()
 <script type="text/javascript" src="circlefan.js"></script>
 
 <body>
-    <div>
-    recursive steps  3 <input id="slider" type="range" min="3" max="50" step="1" value="0">
-    50
-    </div>
-
     <canvas id="gl-canvas" width="512" height="512">>
-    Oops ... your browser doesn't support the HTML5 canvas element
+        Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
 </body>
+
 </html>
