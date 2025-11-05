@@ -1,20 +1,17 @@
 ////////////////////////////////////////////////////////////////////
-// Triis – 3D Tetris skeleton with mouse orbit camera
+// Þríis ! (óklárað)
 ////////////////////////////////////////////////////////////////////
 
 var canvas;
 var gl;
 
-// shader locations
 var colorLoc;
 var mvLoc;
 var pLoc;
 var vPosition;
 
-// projection matrix
 var proj;
 
-// cube data
 var cubeBuffer;
 var numCubeVertices = 36;
 
@@ -26,7 +23,7 @@ var cubeSize = 1.0;
 
 var board = null;
 
-// trominos
+// Trominos
 var SHAPES = {
   blue: {
     color: vec4(0.2, 0.8, 0.9, 1.0),
@@ -56,12 +53,12 @@ var activePiece = null;
 
 
 
-// simple colors
+// litir
 var COLOR_BG   = vec4(0.05, 0.05, 0.08, 1.0);
 var COLOR_CUBE = vec4(0.2, 0.8, 0.9, 1.0);
 var COLOR_GRID = vec4(0.25, 0.25, 0.30, 0.5);
 
-// 36 vertices for a unit cube centered at origin
+// hnútar fyrir kassa
 var cVertices = [
     // front
     vec3(-0.5,  0.5,  0.5), vec3(-0.5, -0.5,  0.5), vec3( 0.5, -0.5,  0.5),
@@ -83,30 +80,27 @@ var cVertices = [
     vec3(-0.5, -0.5,  0.5), vec3(-0.5,  0.5,  0.5), vec3(-0.5,  0.5, -0.5)
 ];
 
-// simple game state placeholder
 var gameState = {
     time: 0.0
 };
 
 ////////////////////////////////////////////////////////////////////
-// Orbit camera state (mouse only)
+// stjórna myndavél með mús
 ////////////////////////////////////////////////////////////////////
 
-// distance from center of Triis map
+// fjarlægð frá miðju
 var camRadius = 30.0;
 
-// horizontal angle around center (yaw), in degrees
+// lárétt horn
 var camYaw   = 225.0;
 
-// vertical angle (pitch), in degrees
+// lóðrétt horn
 var camPitch = 30.0;
 
-// mouse drag state
 var dragging = false;
 var lastX = 0;
 var lastY = 0;
 
-// sensitivity: how fast the camera turns per pixel
 var yawSpeed   = 0.3;
 var pitchSpeed = 0.3;
 
@@ -123,26 +117,21 @@ window.onload = function init() {
     gl.clearColor(COLOR_BG[0], COLOR_BG[1], COLOR_BG[2], COLOR_BG[3]);
     gl.enable(gl.DEPTH_TEST);
 
-    // compile and link shaders
     var program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
-    // cube geometry buffer
     cubeBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(cVertices), gl.STATIC_DRAW);
 
-    // shader attribute
     vPosition = gl.getAttribLocation(program, "vPosition");
     gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
 
-    // shader uniforms
     colorLoc = gl.getUniformLocation(program, "fColor");
     mvLoc    = gl.getUniformLocation(program, "modelview");
     pLoc     = gl.getUniformLocation(program, "projection");
 
-    // projection: 45° FOV, aspect from canvas, near 1, far 200
     var aspect = canvas.width / canvas.height;
     proj = perspective(45.0, aspect, 1.0, 200.0);
     gl.uniformMatrix4fv(pLoc, false, flatten(proj));
@@ -152,7 +141,6 @@ window.onload = function init() {
     spawnInitialPiece();
 
 
-    // mouse handlers for orbit camera
     canvas.addEventListener("mousedown", onMouseDown);
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseup",   onMouseUp);
@@ -236,13 +224,11 @@ function onMouseMove(e) {
     lastY = e.clientY;
 
     camYaw   -= dx * yawSpeed;
-    camPitch += dy * pitchSpeed;  // minus so dragging up looks down
+    camPitch += dy * pitchSpeed;  
 
-    // keep yaw in [0, 360) just to avoid huge numbers
     if (camYaw >= 360.0) camYaw -= 360.0;
     if (camYaw < 0.0)    camYaw += 360.0;
 
-    // clamp pitch so we don't flip over
     var minPitch = -89.0;
     var maxPitch =  89.0;
     if (camPitch < minPitch) camPitch = minPitch;
@@ -270,48 +256,40 @@ function onKeyDown(e) {
       break;
 
     case "ArrowRight":
-      // move piece right in X
+      // x-as haegri
       movePiece(1, 0);
       break;
 
     case "ArrowUp":
-      // move piece "forward" in Y
+      // x-as upp
       movePiece(0, 1);
       break;
 
     case "ArrowDown":
+      // x-as nidur
       movePiece(0,-1);
       break;
 
     case "Space":
         hardDrop();
     case "KeyA":
-      // rotate one way (around z-axis for example)
       rotatePieceX(1);
       break;
     case "KeyZ":
-      // rotate other way
       rotatePieceX(-1);
       break;
     case "KeyS":
-      // rotate other way
       rotatePieceY(1);
       break;
     case "KeyX":
-      // rotate other way
       rotatePieceY(-1);
       break;
     case "KeyD":
-      // rotate other way
       rotatePieceZ(1);
       break;
     case "KeyC":
-      // rotate other way
       rotatePieceZ(-1);
       break;
-
-    // add more keys if you want
-    // case "KeyA": ...
   }
 }
 
@@ -436,7 +414,6 @@ function isPosIllegal(piece) {
   var illegal = false;
 
   forEachBlock(piece, function (gx, gy, gz) {
-    // hits walls or ceiling/floor?
     if (gx < 0 || gx >= GRID_X ||
         gy < 0 || gy >= GRID_Y ||
         gz < 0 || gz >= GRID_Z) {
@@ -444,7 +421,6 @@ function isPosIllegal(piece) {
       return;
     }
 
-    // overlaps existing block at same (x,y,z)?
     if (board[gx][gy][gz] !== 0) {
       illegal = true;
       return;
@@ -503,26 +479,23 @@ function lockPiece(piece) {
 
 
 function render(now) {
-    // 'now' is in milliseconds from requestAnimFrame
     if (lastFrameTime === null) {
         lastFrameTime = now;
     }
 
-    var dt = (now - lastFrameTime) / 1000.0; // convert to seconds
+    var dt = (now - lastFrameTime) 
     lastFrameTime = now;
 
     gameState.time += dt;
     dropTimer += dt;
 
-    // drop piece when enough time has passed
     if (dropTimer >= dropInterval) {
         dropPiece();
-        dropTimer -= dropInterval; // keep leftover time
+        dropTimer -= dropInterval;
     }
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // convert yaw/pitch to eye position on a sphere around origin
     var yawRad   = radians(camYaw);
     var pitchRad = radians(camPitch);
 
@@ -532,7 +505,6 @@ function render(now) {
 
     var eye = vec3(eyeX, eyeY, eyeZ);
 
-    // center of Triis map (we use origin for now)
     var at  = vec3(0.0, 0.0, 0.0);
     var up  = vec3(0.0, 0.0, 1.0);
 
