@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Triis</title>
+</head>
+
+<body>
+  <h3>Triis – 3D Tetris prototype</h3>
+  <p>Use this as a base. All pieces will be cubes.</p>
+
+  <canvas id="gl-canvas" width="700" height="700">
+    Your browser does not support the HTML5 canvas element.
+  </canvas>
+
+  <!-- Vertex shader -->
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    attribute vec4 vPosition;
+
+    uniform mat4 projection;
+    uniform mat4 modelview;
+
+    void main() {
+        gl_Position = projection * modelview * vPosition;
+    }
+  </script>
+
+  <!-- Fragment shader -->
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    uniform vec4 fColor;
+
+    void main() {
+        gl_FragColor = fColor;
+    }
+  </script>
+
+  <!-- Common utilities (same style as viewpoints project) -->
+  <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+  <script type="text/javascript" src="../Common/initShaders.js"></script>
+  <script type="text/javascript" src="../Common/MV.js"></script>
+
+  <!-- Game code -->
+  <script type="text/javascript" src="triis.js"></script>
+</body>
+</html>
+
