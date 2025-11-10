@@ -45,7 +45,7 @@ var SHAPES = {
   }
 }
 
-var dropInterval = 0.5;
+var dropInterval = 300; // hraði á falli (bil á for-loop í ms)
 var dropTimer = 0.0;
 var lastFrameTime = null;
 
@@ -272,6 +272,7 @@ function onKeyDown(e) {
 
     case "Space":
         hardDrop();
+        break;
     case "KeyA":
       rotatePieceX(1);
       break;
@@ -448,8 +449,7 @@ function movePiece(dx, dy) {
     checkCollision(activePiece);
 }
 function rotatePieceX(dir) {
- // TODO: rotate 
-
+  
 }
 
 function rotatePieceY() { }
@@ -474,7 +474,7 @@ function lockPiece(piece) {
 
 
 ////////////////////////////////////////////////////////////////////
-// Main render loop
+// Render
 ////////////////////////////////////////////////////////////////////
 
 
